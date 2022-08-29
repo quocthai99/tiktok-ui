@@ -103,6 +103,8 @@
 }
 
 .action-btn {
+    display: flex;
+    align-items: center;
     background-color: transparent;
     font-size: 2rem;
     color: #161823;
