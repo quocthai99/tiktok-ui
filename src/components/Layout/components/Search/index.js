@@ -7,6 +7,8 @@ import 'tippy.js/dist/tippy.css';
 
 import AcountItem from '~/components/AcountItem';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
+import { useDebounce } from '~/hooks';
+import * as searchServices from '~/apiServices/searchServices';
 
 import classNames from 'classnames/bind';
 import styles from './Search.module.scss';
@@ -17,23 +19,38 @@ const Search = () => {
     const [searchResult, setSearchResult] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const [showResult, setShowResult] = useState(true);
+    const [loading, setLoading] = useState(false);
+
+    const debounced = useDebounce(searchValue, 500);
 
     const inputRef = useRef();
 
     useEffect(() => {
-        setTimeout(() => {
-            setSearchResult([1,1,1]);
-        }, 0);
-    }, []);
+        if (!debounced.trim()) {
+            setSearchResult([]);
+            return;
+        }
+
+        const fetchApi = async () => {
+            setLoading(true)
+
+            const result = await searchServices.search(debounced);
+            setSearchResult(result);
+
+            setLoading(false)
+        };
+
+        fetchApi()
+    }, [debounced]);
 
     const handleClear = () => {
         setSearchValue('');
-        inputRef.current.focus()
-    }
+        inputRef.current.focus();
+    };
 
     const handleHideResult = () => {
-        setShowResult(false)
-    }
+        setShowResult(false);
+    };
 
     return (
         <HeadlessTippy
@@ -43,10 +60,9 @@ const Search = () => {
                 <div className={cx('search-result')} tabIndex="-1" {...attrs}>
                     <PopperWrapper>
                         <h4 className={cx('search-title')}>Accounts</h4>
-                        <AcountItem />
-                        <AcountItem />
-                        <AcountItem />
-                        <AcountItem />
+                        {searchResult.map((result) => (
+                            <AcountItem key={result.id} data={result} />
+                        ))}
                     </PopperWrapper>
                 </div>
             )}
@@ -61,15 +77,12 @@ const Search = () => {
                     onChange={(e) => setSearchValue(e.target.value)}
                     onFocus={() => setShowResult(true)}
                 />
-                {!!searchValue && (
-                    <button
-                        className={cx('clear')}
-                        onClick={handleClear}
-                    >
+                {!!searchValue && !loading && (
+                    <button className={cx('clear')} onClick={handleClear}>
                         <FontAwesomeIcon icon={faCircleXmark} />
                     </button>
                 )}
-                {/* <FontAwesomeIcon className={cx('loading')} icon={faSpinner} /> */}
+                {loading && <FontAwesomeIcon className={cx('loading')} icon={faSpinner} />}
                 <button className={cx('search-btn')}>
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
                 </button>
