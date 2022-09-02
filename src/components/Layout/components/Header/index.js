@@ -1,26 +1,18 @@
-import React, { useEffect, useState } from 'react';
-
 import images from '~/assets/images';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCircleQuestion,
-    faCircleXmark,
     faCoins,
     faEarthAsia,
     faGear,
     faKeyboard,
-    faMagnifyingGlass,
     faPlus,
     faSignOut,
-    faSpinner,
     faUser,
 } from '@fortawesome/free-solid-svg-icons';
-import HeadlessTippy from '@tippyjs/react/headless';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 
-import AcountItem from '~/components/AcountItem';
-import { Wrapper as PopperWrapper } from '~/components/Popper';
 import Button from '~/components/Button';
 import Menu from '~/components/Popper/Menu';
 import Image from '~/components/Image';
@@ -28,6 +20,7 @@ import Image from '~/components/Image';
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import { InboxIcon, MessageIcon, SearchIcon, UploadIcon } from '~/components/Icons';
+import Search from '../Search';
 
 const cx = classNames.bind(styles);
 
@@ -63,15 +56,7 @@ const MENU_ITEMS = [
 ];
 
 const Header = () => {
-    const [searchResult, setSearchResult] = useState([]);
-
     const currentUser = true;
-
-    useEffect(() => {
-        setTimeout(() => {
-            setSearchResult([]);
-        }, 0);
-    }, []);
 
     const handleMenuChange = (menuItem) => {
         console.log(menuItem);
@@ -100,7 +85,7 @@ const Header = () => {
             to: '/',
             separate: true,
         },
-    ]
+    ];
 
     return (
         <header className={cx('wrapper')}>
@@ -108,37 +93,14 @@ const Header = () => {
                 <div className={cx('logo')}>
                     <img src={images.logo} alt="TikTok" />
                 </div>
-                <HeadlessTippy
-                    interactive
-                    visible={searchResult.length > 0}
-                    render={(attrs) => (
-                        <div className={cx('search-result')} tabIndex="-1" {...attrs}>
-                            <PopperWrapper>
-                                <h4 className={cx('search-title')}>Accounts</h4>
-                                <AcountItem />
-                                <AcountItem />
-                                <AcountItem />
-                                <AcountItem />
-                            </PopperWrapper>
-                        </div>
-                    )}
-                >
-                    <div className={cx('search')}>
-                        <input placeholder="Search accounts and videos" spellCheck={false} />
-                        <button className={cx('clear')}>
-                            <FontAwesomeIcon icon={faCircleXmark} />
-                        </button>
-                        <FontAwesomeIcon className={cx('loading')} icon={faSpinner} />
-                        <button className={cx('search-btn')}>
-                            <FontAwesomeIcon icon={faMagnifyingGlass} />
-                        </button>
-                    </div>
-                </HeadlessTippy>
+
+                <Search />
+
                 <div className={cx('action')}>
                     {currentUser ? (
                         <>
-                            <Tippy delay={[0, 50]} content='Upload video' placement='bottom' >
-                                <button className={cx('action-btn')} >
+                            <Tippy delay={[0, 50]} content="Upload video" placement="bottom">
+                                <button className={cx('action-btn')}>
                                     <UploadIcon />
                                 </button>
                             </Tippy>
@@ -162,7 +124,7 @@ const Header = () => {
                             <Button primary> Login</Button>
                         </>
                     )}
-                    <Menu items={ currentUser ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>
+                    <Menu items={currentUser ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>
                         {currentUser ? (
                             <Image
                                 className={cx('user-avatar')}
