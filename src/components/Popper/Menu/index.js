@@ -13,7 +13,7 @@ const cx = classNames.bind(styles);
 
 const defaultFc = () => {};
 
-const Menu = ({ children, items = [], onChange = defaultFc }) => {
+const Menu = ({ children, items = [], hideOnClick = false, onChange = defaultFc }) => {
     const [history, setHistory] = useState([{ data: items }]);
     const current = history[history.length - 1];
 
@@ -27,11 +27,11 @@ const Menu = ({ children, items = [], onChange = defaultFc }) => {
                     data={item}
                     onClick={() => {
                         if (isParent) {
-                            setHistory((prev => {
-                                return [...prev, item.children]
-                            }))
+                            setHistory((prev) => {
+                                return [...prev, item.children];
+                            });
                         } else {
-                            onChange(item)
+                            onChange(item);
                         }
                     }}
                 />
@@ -41,8 +41,9 @@ const Menu = ({ children, items = [], onChange = defaultFc }) => {
 
     return (
         <Tippy
+            hideOnClick={hideOnClick}
             delay={[0, 500]}
-            offset={[12,8]}
+            offset={[12, 8]}
             interactive
             placement="bottom-end"
             render={(attrs) => (
@@ -56,11 +57,11 @@ const Menu = ({ children, items = [], onChange = defaultFc }) => {
                                 }}
                             />
                         )}
-                        {renderItems()}
+                        <div className={cx('menu-body')}>{renderItems()}</div>
                     </PopperWrapper>
                 </div>
             )}
-            onHide={() => setHistory(prev => prev.slice(0, 1))}
+            onHide={() => setHistory((prev) => prev.slice(0, 1))}
         >
             {children}
         </Tippy>
