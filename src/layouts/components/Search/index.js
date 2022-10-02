@@ -8,7 +8,7 @@ import 'tippy.js/dist/tippy.css';
 import AcountItem from '~/components/AcountItem';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import { useDebounce } from '~/hooks';
-import * as searchServices from '~/apiServices/searchServices';
+import * as searchServices from '~/services/searchServices';
 
 import classNames from 'classnames/bind';
 import styles from './Search.module.scss';

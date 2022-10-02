@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Protypes from 'prop-types';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
@@ -29,5 +30,9 @@ const AcountItem = ({data}) => {
         </Link>
     );
 };
+
+AcountItem.propTypes = {
+    data: Protypes.object
+}
 
 export default AcountItem;
